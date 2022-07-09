@@ -195,7 +195,9 @@ class Game:
     def get_index_from_input(self, prompt: str) -> Bottle:
         while True:
             try:
-                return int(input(prompt)) - 1
+                index = int(input(prompt)) - 1
+                self.bottles[index]
+                return index
             except Exception:
                 print("Invalid input")
 
