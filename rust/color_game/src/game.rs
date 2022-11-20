@@ -367,6 +367,9 @@ impl Game {
     }
 
     pub fn play_move(&mut self, source_index: usize, target_index: usize) {
+        if source_index == target_index{
+            return;
+        }
         // This part is a bit crazy, it's a workaround to borrow 2 mutable elements
         if source_index < target_index {
             let (head, tail) = self.bottles.split_at_mut(source_index + 1);
