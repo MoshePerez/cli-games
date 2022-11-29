@@ -12,8 +12,12 @@ pub fn clear_screen() {
 }
 
 pub fn run_game(game: &mut Game) {
+    let mut error_message = "";
     loop {
         clear_screen();
+        if error_message != ""{
+            println!("{error_message}")
+        }
         game.print_bottles();
         if game.is_game_won() {
             println!("{YOU_WIN_BANNER}");
@@ -25,7 +29,7 @@ pub fn run_game(game: &mut Game) {
         }
         let source_index = game.get_index_from_input("Enter source bottle number:");
         let target_index = game.get_index_from_input("Enter target bottle number:");
-        game.play_move(source_index, target_index);
+        error_message = game.play_move(source_index, target_index);
     }
 }
 

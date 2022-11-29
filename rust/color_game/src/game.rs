@@ -150,21 +150,27 @@ impl Bottle {
         (last_color, size)
     }
 
-    pub fn pour_into(&mut self, target: &mut Bottle) {
-        if target.is_full() || self.is_complete() || self.is_empty() {
-            println!("invalid move");
-            return;
+    pub fn pour_into(&mut self, target: &mut Bottle) -> &str {
+        if target.is_full(){
+            return "Target cannot be a full bottle";
         }
+        if self.is_complete(){
+            return "Source cannot be a completed bottle";
+        }
+        if self.is_empty(){
+            return "Source cannot be empty";
+        }
+        
         let (bottle_top_color, bottle_top_size) = self.get_top_color_and_size();
         let (target_top_color, _) = target.get_top_color_and_size();
         if target_top_color != Color::Transparent && target_top_color != bottle_top_color {
-            println!("invalid move");
-            return;
+            return "Source and target colors must be the same";
         }
         let moves_to_make = min(bottle_top_size, target.get_empty_space_count());
         for _ in 0..moves_to_make {
             target.push_color_unit(self.pop_color_unit());
         }
+        return "";
     }
 }
 
@@ -366,17 +372,17 @@ impl Game {
         }
     }
 
-    pub fn play_move(&mut self, source_index: usize, target_index: usize) {
+    pub fn play_move(&mut self, source_index: usize, target_index: usize) -> &str{
         if source_index == target_index{
-            return;
+            return "";
         }
         // This part is a bit crazy, it's a workaround to borrow 2 mutable elements
         if source_index < target_index {
             let (head, tail) = self.bottles.split_at_mut(source_index + 1);
-            head[source_index].pour_into(&mut tail[target_index - source_index - 1]);
+            return head[source_index].pour_into(&mut tail[target_index - source_index - 1]);
         } else {
             let (head, tail) = self.bottles.split_at_mut(target_index + 1);
-            tail[source_index - target_index - 1].pour_into(&mut head[target_index])
+            return tail[source_index - target_index - 1].pour_into(&mut head[target_index])
         }
     }
 }
