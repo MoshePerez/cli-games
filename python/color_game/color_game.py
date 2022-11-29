@@ -80,15 +80,18 @@ class Bottle:
                 return
         raise IndexError("push to full bottle")
 
-    def pour_into(self, target: Bottle):
-        if target.is_full() or self.is_complete() or self.is_empty():
-            print("invalid move")
-            return
+    def pour_into(self, target: Bottle) -> Optional[str]:
+        if target.is_full():
+            return "Target cannot be a full bottle"
+        if self.is_complete():
+            return "Source cannot be a completed bottle"
+        if self.is_empty():
+            return "Source cannot be empty"
+        
         bottle_top_color, bottle_top_size = self.get_top_color_and_size()
         target_top_color, _ = target.get_top_color_and_size()
         if target_top_color is not None and target_top_color != bottle_top_color:
-            print("invalid move")
-            return
+            return "Source and target colors must be the same"
         moves_to_make = min(bottle_top_size, target.get_empty_space_count())
         for _ in range(moves_to_make):
             target.push_color_unit(self.pop_color_unit())
@@ -201,8 +204,8 @@ class Game:
             except Exception:
                 print("Invalid input")
 
-    def play_move(self, move: Tuple[int, int]):
+    def play_move(self, move: Tuple[int, int]) -> Optional[str]:
         source_index, target_index = move
         source_bottle = self.bottles[source_index]
         target_bottle = self.bottles[target_index]
-        source_bottle.pour_into(target_bottle)
+        return source_bottle.pour_into(target_bottle)

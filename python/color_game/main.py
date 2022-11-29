@@ -13,8 +13,11 @@ def clear_screen():
         os.system('clear')
 
 def run_game(game: Game, auto_play=False):
+    error_str = None
     while True:
         clear_screen()
+        if error_str is not None:
+            print(error_str)
         game.print_bottles()
         if game.is_game_won():
             print(YOU_WIN_BANNER)
@@ -37,7 +40,7 @@ def run_game(game: Game, auto_play=False):
         else:
             source_index = game.get_index_from_input(prompt="Enter source bottle number:\n")
             target_index = game.get_index_from_input(prompt="Enter target bottle number:\n")
-            game.play_move((source_index, target_index))
+            error_str = game.play_move((source_index, target_index))
 
 
 def main():
